@@ -1,0 +1,70 @@
+﻿{
+  "name": "Pipeline Status",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "status",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "WebhookStatus",
+      "name": "Webhook Status",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300],
+      "webhookId": "openclaw-status"
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log('Pipeline status payload', $json);\nreturn [{ json: { ok: true, logged: true, route: 'status', payload: $json } }];"
+      },
+      "id": "LogStatus",
+      "name": "Log Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "RespondStatus",
+      "name": "Respond Status",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [770, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Status": {
+      "main": [
+        [
+          {
+            "node": "Log Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Status": {
+      "main": [
+        [
+          {
+            "node": "Respond Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "00000000-0000-0000-0000-000000000002"
+}

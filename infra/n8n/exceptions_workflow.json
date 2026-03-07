@@ -1,0 +1,70 @@
+﻿{
+  "name": "GateB Exceptions",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "exceptions",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "WebhookExceptions",
+      "name": "Webhook Exceptions",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300],
+      "webhookId": "openclaw-exceptions"
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log('Gate B exception payload', $json);\nreturn [{ json: { ok: true, logged: true, route: 'exceptions', payload: $json } }];"
+      },
+      "id": "LogExceptions",
+      "name": "Log Exceptions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "RespondExceptions",
+      "name": "Respond Exceptions",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [770, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Exceptions": {
+      "main": [
+        [
+          {
+            "node": "Log Exceptions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Exceptions": {
+      "main": [
+        [
+          {
+            "node": "Respond Exceptions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "versionId": "00000000-0000-0000-0000-000000000001"
+}
